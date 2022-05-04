@@ -8,9 +8,28 @@ class Product {
   }
 }
 
+class ShoppingCart {
+  items = [];
+
+  render() {
+    const cartEl = document.createElement('section');
+    cartEl.innerHTML = `
+    <h2>total: \$${0}</h2>
+    <button>order</button>
+    `;
+    cartEl.className = 'cart';
+    return cartEl;
+  }
+}
+
 class ProductItem {
   constructor(product) {
     this.product=product
+  }
+
+  addToCart() {
+    console.log(this.product.title)
+    // console.log(this.product)
   }
 
   render() {
@@ -27,12 +46,15 @@ class ProductItem {
         </div>
       </div>
     `;
+    const addCartBtn = prodEl.querySelector('button');
+    //binding product item object, can access product object on click. without, this.product would fail
+    addCartBtn.addEventListener('click', this.addToCart.bind(this))
     return prodEl;
   }
 }
 
-const productList = {
-  products: [
+class ProductList {
+  products= [
     new Product(
       'pillow',
       'https://www.maxpixel.net/static/photo/2x/Soft-Pillow-Green-Decoration-Deco-Snuggle-1241878.jpg',
@@ -45,9 +67,12 @@ const productList = {
       'carpet data',
       89.99
     )
-  ],
+  ];
+
+  constructor() {}
+
   render() {
-    const main = document.getElementById('app');
+    
     const prodList = document.createElement('ul');
     prodList.className = 'product-list';
     for (const prod of this.products) {
@@ -55,8 +80,23 @@ const productList = {
       const prodEl = productItem.render();
       prodList.append(prodEl)
     }
-    main.append(prodList);
+    return prodList;
   }
 };
 
-productList.render();
+class Shop {
+  render() {
+    const main = document.getElementById('app');
+    const cart = new ShoppingCart();
+    const cartEl = cart.render();
+    const productList = new ProductList();
+    const prodListEl = productList.render();
+
+    main.append(cartEl);
+    main.append(prodListEl);
+  }
+}
+
+const shop = new Shop();
+shop.render();
+
